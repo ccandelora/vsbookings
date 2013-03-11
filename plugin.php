@@ -2,7 +2,7 @@
 /* 
     Plugin Name: VS Booking
     Plugin URI: 
-    Description: Plugin for easy managing hotel bookings.
+    Description: Plugin designed to easily manage hotel bookings.
     Author: <a href="http://www.linkedin.com/in/valentinslavov">Valentin Slavov</a>
     Version: 0.9.0
 */
