@@ -161,10 +161,10 @@ class vsb_admin_base {
 		$count = $wpdb->get_var("SELECT COUNT(id) FROM $table_reservations WHERE approved = '$approved'");
 		$recordsPerPage = 35;
 		$currentPage = (isset($_GET['p'])) ? $_GET['p'] : 1;		
-		$result = $wpdb->get_results( "SELECT A.id, A.room_id, B.room_price, A.start_date, A.end_date, A.email, A.phone FROM $table_reservations A JOIN $table_rooms B ON A.room_id = B.id WHERE A.approved = '$approved' LIMIT $recordsPerPage OFFSET ".$recordsPerPage*($currentPage-1));
+		$result = $wpdb->get_results( "SELECT A.*, B.room_price FROM $table_reservations A JOIN $table_rooms B ON A.room_id = B.id WHERE A.approved = '$approved' LIMIT $recordsPerPage OFFSET ".$recordsPerPage*($currentPage-1));
 		$pagesCount = ceil($count / $recordsPerPage);
 		$i = 0;
-		echo "<div id='lists'><form method='POST' action='".get_bloginfo('url')."/wp-content/plugins/VSBookings/process.php'><table border=0 cellspacing=5><th>Reservation ID</th><th>Room №</th><th>Price per night</th><th>Total price</th><th>Start date</th><th>End date</th><th>Stay</th><th>E-mail</th><th>Phone</th>".((!$approved) ? "<th>Approve</th>" : "")."<th>Delete</th>";
+		echo "<div id='lists'><form method='POST' action='".get_bloginfo('url')."/wp-content/plugins/VSBookings/process.php'><table border=0 cellspacing=5><th>Reservation ID</th><th>Room №</th><th>Name</th><th>Price per night</th><th>Total price</th><th>Start date</th><th>End date</th><th>Stay</th><th>E-mail</th><th>Phone</th>".((!$approved) ? "<th>Approve</th>" : "")."<th>Delete</th>";
 		foreach($result as $row) {
 			$start = new DateTime("$row->start_date");
 			$end = new DateTime("$row->end_date");
@@ -175,6 +175,7 @@ class vsb_admin_base {
 			if ($i % 2 == 0) { echo "<tr>"; } else { echo "<tr class='odd'>"; }
 			echo "<td>".$row->id."</td>";
 			echo "<td>".$row->room_id."</td>";
+			echo "<td>".$row->name."</td>";
 			echo "<td>".$row->room_price."</td>";
 			echo "<td>".$calc1."</td>";
 			echo "<td>".$row->start_date."</td>";
