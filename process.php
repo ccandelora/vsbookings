@@ -38,19 +38,19 @@ session_start();
 			$name = $_POST['name'];
 			
 			if (($name == '') || ($phone == '') || ($email == '') || ($enddate == '') || ($startdate == '')) { 
-				header('Location: ' . $_SERVER['HTTP_REFERER']);
 				$_SESSION['error'] = 'Please fill all fields.';
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
 				break;
 			} else {
 				if (($startdate == "") || ($enddate =="")) {
-					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					$_SESSION['error'] = 'Select time period.';
+					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					break;
 				}
 				
 				if (!preg_match('/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/',$email)) {
-					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					$_SESSION['error'] = 'Invalid email address.';
+					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					break;
 				}
 				
@@ -67,14 +67,14 @@ session_start();
 
 									
 				if (empty($result)) {
-					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					$_SESSION['error'] = "We don't have spare rooms in your selected period of this type.";
+					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					break;
 				} else {
-					$wpdb->insert($table_reservations,array('start_date' => $startdate,'end_date' => $enddate,'email' => $email,'phone' => $phone,'room_id'=>$result[0]["id"]),array('%s','%s','%s','%s','%d'));
+					$wpdb->insert($table_reservations,array('start_date' => $startdate,'end_date' => $enddate,'email' => $email,'phone' => $phone,'name' => $name, 'room_id'=>$result[0]["id"]),array('%s','%s','%s','%s','%s','%d'));
 					
-					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					$_SESSION['error'] = "Successfully booked!";
+					header('Location: ' . $_SERVER['HTTP_REFERER']);		
 				}
 			}
 			break;		
