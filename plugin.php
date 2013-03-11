@@ -1,10 +1,10 @@
 <?php
 /* 
     Plugin Name: VS Booking
-    Plugin URI: Not set
+    Plugin URI: 
     Description: Plugin for easy managing hotel bookings.
-    Author: Valentin Slavov
-    Version: 0.0.1
+    Author: <a href="http://www.linkedin.com/in/valentinslavov">Valentin Slavov</a>
+    Version: 0.9.0
 */
 
 include ("plugin_admin.php");
