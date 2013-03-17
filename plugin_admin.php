@@ -35,7 +35,7 @@ class vsb_admin_base {
 		global $wpdb;
 		$table_rooms = $wpdb->prefix . plugin_db_prefix . 'rooms';
 		$sql = "CREATE TABLE $table_rooms (
-				id tinyint NOT NULL AUTO_INCREMENT,
+				id intenger NOT NULL AUTO_INCREMENT,
 				room_type tinyint NOT NULL,
 				room_price decimal(7, 2) NOT NULL,
 				UNIQUE KEY id (id));";
@@ -48,7 +48,7 @@ class vsb_admin_base {
 		global $wpdb;
 		$table_reservations = $wpdb->prefix . plugin_db_prefix . 'reservations';
 		$sql = "CREATE TABLE $table_reservations (
-				id tinyint NOT NULL AUTO_INCREMENT,
+				id integer NOT NULL AUTO_INCREMENT,
 				room_id integer NOT NULL,
 				start_date date NOT NULL,
 				end_date date NOT NULL,
