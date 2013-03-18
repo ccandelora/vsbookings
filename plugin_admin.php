@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-define("plugin_db_prefix", "vsb_");
+DEFINE("plugin_db_prefix", "vsb_");
 class vsb_admin_base {
 
 	function __construct() {
@@ -80,16 +80,15 @@ class vsb_admin_base {
 		
 		if (isset($_SESSION['error'])){
 			$error = $_SESSION['error'];
-			unset($_SESSION['error']);
-		}		
+			unset($_SESSION['error']);}		
 		
 		$page = "<center><form method='POST' action='".get_bloginfo('url')."/wp-content/plugins/VSBookings/process.php'>" .
 				"<b>" . $error . "</b></br>" .
 				"Room type: <select name='room_type'>";
-		
-		$table_types = $this->vsb_get_table('room_types');
-		$result = $wpdb->get_results( "SELECT * FROM $table_types" );		
 				
+		$table_types = $this->vsb_get_table('room_types');
+		$result = $wpdb->get_results( "SELECT * FROM $table_types" );
+		
 		foreach($result as $row) { $page .= "<option value='".$row->id."'>".$row->room_name."</option>"; }
 				
 		$page .= "</select></br>".
@@ -187,7 +186,7 @@ class vsb_admin_base {
 			echo "<td><input type='checkbox' name='delete[]' value='".$row->id."'/></td>";			
 			echo "</tr>";
 		}		
-		echo "</table></div></br><input type='submit' name='submit' value='Update selected' /><input type='hidden' name='action' value='delete_reservations' /></form>";		
+		echo "</table></div></br><input type='submit' name='submit' value='Update selected' /><input type='hidden' name='action' value='update_reservations' /></form>";		
 		
 		if ($currentPage > 1) { echo "<a href='?page=".$_GET['page']."&p=".($currentPage-1)."'>Previous page</a>&nbsp;"; }
 		if ($currentPage < $pagesCount) { echo "<a href='?page=".$_GET['page']."&p=".($currentPage+1)."'>Next page</a>"; }

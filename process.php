@@ -1,17 +1,14 @@
 ﻿<?php
 session_start();
 
-	require_once("../../../wp-config.php");
 	global $wpdb;
-	
+require_once("../../../wp-config.php");
 	$table_types = $wpdb->prefix . plugin_db_prefix . 'room_types';
 	$table_rooms = $wpdb->prefix . plugin_db_prefix . 'rooms';
 	$table_reservations = $wpdb->prefix . plugin_db_prefix . 'reservations';
 			
 	switch($_POST['action']) {
 		case 'create_room_type': {
-
-			
 			$name=$_POST['name'];
 			$price=$_POST['price'];
 			$quantity=$_POST['quantity'];
@@ -53,19 +50,21 @@ session_start();
 					header('Location: ' . $_SERVER['HTTP_REFERER']);
 					break;
 				}
-				
-				$result = $wpdb->get_results("SELECT B.id FROM " . $table_reservations . " A" .
-						" RIGHT JOIN " . $table_rooms . " B" . 
-						" ON A.room_id = B.id WHERE B.room_type='$roomtype' AND ((B.id NOT IN (SELECT room_id FROM " . $table_reservations . 
-						" WHERE ((start_date BETWEEN '$startdate' AND '$enddate') OR" .
-						" (end_date BETWEEN '$startdate' AND '$enddate') OR" . 
-						" ('$startdate' BETWEEN  start_date AND end_date) OR" . 
-						" ('$enddate' BETWEEN start_date AND start_date)) AND" . 
-						" room_id IN (SELECT id from " . $table_rooms .
-						" WHERE room_type = '$roomtype'))) OR" . 
-						" (start_date IS NULL OR end_date IS NULL)) LIMIT 1",ARRAY_A);
 
-									
+				$result = $wpdb->get_results(
+							$wpdb->prepare("SELECT B.id FROM " . $table_reservations . " A" .
+								" RIGHT JOIN " . $table_rooms . " B" . 
+								" ON A.room_id = B.id WHERE B.room_type='$roomtype' AND ((B.id NOT IN (SELECT room_id FROM " . $table_reservations . 
+								" WHERE ((start_date BETWEEN '$startdate' AND '$enddate') OR" .
+								" (end_date BETWEEN '$startdate' AND '$enddate') OR" . 
+								" ('$startdate' BETWEEN  start_date AND end_date) OR" . 
+								" ('$enddate' BETWEEN start_date AND start_date)) AND" . 
+								" room_id IN (SELECT id from " . $table_rooms .
+								" WHERE room_type = '$roomtype'))) OR" . 
+								" (start_date IS NULL OR end_date IS NULL)) LIMIT 1",
+								$table_reservations, $table_rooms, $roomtype, $table_reservations, $startdate, $enddate, $startdate, $enddate, $startdate, $enddate, $table_rooms, $roomtype),ARRAY_A
+						);
+				
 				if (empty($result)) {
 					$_SESSION['error'] = "We don't have spare rooms in your selected period of this type.";
 					header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -80,15 +79,25 @@ session_start();
 			break;		
 		} 
 		
-		case 'delete_reservations': {					
+		case 'update_reservations': {					
 			$approveRange = getSelectRange($_POST['approve']);
-			if ($approveRange !== "") {
-				$wpdb->query("UPDATE $table_reservations SET approved='1' WHERE id IN($approveRange)");
+			if (!empty($approveRange)) {
+				$wpdb->query(
+					$wpdb->prepare(
+						"UPDATE $table_reservations SET approved='1' WHERE id IN(%s)",
+						$approveRange
+					)
+				);
 			}		
 			
 			$deleteRange = getSelectRange($_POST['delete']);
-			if ($deleteRange !== "") {
-				$wpdb->query("DELETE FROM $table_reservations WHERE id IN($deleteRange)");
+			if (!empty($deleteRange)) {
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM $table_reservations WHERE id IN(%s)",
+						$deleteRange
+					)
+				);
 			}								
 			
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -97,7 +106,12 @@ session_start();
 		case 'delete_room_types': {
 			$deleteRange = getSelectRange($_POST['delete']);
 			if ($deleteRange !== "") {
-				$wpdb->query("DELETE FROM $table_types WHERE id IN($deleteRange)");
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM $table_types WHERE id IN(%s)",
+						$deleteRange
+					)
+				);
 			}
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
